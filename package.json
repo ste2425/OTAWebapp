@@ -1,0 +1,13 @@
+{
+  "name": "otawebapp",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "http-server -o -a localhost"
+  },
+  "devDependencies": {
+    "@types/web-bluetooth": "^0.0.17",
+    "http-server": "^14.1.1"
+  }
+}
