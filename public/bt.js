@@ -12,7 +12,8 @@ let device;
         remaining = 0,
         amountToWrite = 0,
         currentPosition = 0,
-        otaInProgress = false;
+        otaInProgress = false,
+        otaFinished = false;
 
     /** @type {ArrayBuffer} */
     let update;
@@ -56,6 +57,8 @@ export async function btConnect(logger) {
 
             if (otaInProgress) {
                 alert('GATT Server disconnected whilst OTA in progress. Reset ESP, reload page and try again.');
+            } else if (otaFinished) {
+                alert('OTA update complete. Reload the page and re-connect to the ESP.');
             }
         });
     
@@ -118,7 +121,6 @@ export async function sendNextBlock(logger, setProgres) {
     if (remaining <= 0) {
         logger.log('Complete');
         otaInProgress = false;
-        alert('OTA update complete. Reload the page and re-connect to the ESP.');
         return;
     }
     
@@ -126,6 +128,14 @@ export async function sendNextBlock(logger, setProgres) {
         amountToWrite = blockSize;
     } else {
         amountToWrite = remaining;
+    }
+
+    // The ESP resets during during the write handler meaning for the last write the promise never resolves
+    // In a real app this should be handled better, maybe with a task.
+    // For now just set the flag for when the disconnect event happens.
+    if (remaining - amountToWrite === 0) {
+        otaInProgress = false;
+        otaFinished = true;
     }
 
     const dataToSend = new DataView(update, currentPosition, amountToWrite);
