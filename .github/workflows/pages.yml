@@ -1,0 +1,29 @@
+name: Pages
+
+on:
+  push:
+    branches:
+      - main # default branch
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Make folders
+        run: mkdir public && mkdir public/btstackota
+
+      - name: copy html
+        run: cp index.html public/btstackota/index.html
+
+      - name: copy js
+        run: cp *.js public/btstackota
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public/btstackota
