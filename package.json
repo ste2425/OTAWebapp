@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "http-server -o -a localhost"
+    "start": "http-server -o btstackota -a localhost"
   },
   "devDependencies": {
     "@types/web-bluetooth": "^0.0.17",
